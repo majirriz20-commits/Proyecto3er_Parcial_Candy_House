@@ -5,9 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.candyhouse"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36 // Se corrigió esta línea con la sintaxis correcta
 
     defaultConfig {
         applicationId = "com.example.candyhouse"
@@ -38,7 +36,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -53,4 +50,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+
+    implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
 }
