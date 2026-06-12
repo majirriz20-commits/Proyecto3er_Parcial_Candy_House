@@ -80,9 +80,18 @@ fun HistorialScreen(
                         .padding(vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val accionColor = when (movimiento.accion) {
+                        "Venta"   -> Color(0xFFFF3B7B)
+                        "Surtido" -> Color(0xFF00D4FF)
+                        "Ajuste"  -> Color(0xFFFFC107)
+                        else      -> Color.Gray
+                    }
+                    val cantidadColor = if (movimiento.cantidad.startsWith("+"))
+                        Color(0xFF4CAF50) else Color(0xFFE53935)
+
                     Text(movimiento.producto, fontSize = 13.sp, modifier = Modifier.weight(1.2f), maxLines = 2)
-                    Text(movimiento.accion,   fontSize = 12.sp, modifier = Modifier.weight(0.8f))
-                    Text(movimiento.cantidad, fontSize = 12.sp, modifier = Modifier.weight(0.9f))
+                    Text(movimiento.accion,   fontSize = 12.sp, modifier = Modifier.weight(0.8f), color = accionColor, fontWeight = FontWeight.Medium)
+                    Text(movimiento.cantidad, fontSize = 12.sp, modifier = Modifier.weight(0.9f), color = cantidadColor, fontWeight = FontWeight.SemiBold)
                     Text(movimiento.fecha,    fontSize = 11.sp, modifier = Modifier.weight(0.9f), color = Color.Gray)
                 }
                 HorizontalDivider(color = Color(0xFFF5F5F5))
