@@ -23,7 +23,7 @@ data class MovimientoHistorial(
 )
 
 
-private val datosEjemplo = listOf(
+    val datosEjemplo = listOf(
     MovimientoHistorial(1,  "Gomitas de osito", "Venta",   "-14 pz", "hoy 14:30"),
     MovimientoHistorial(2,  "Paleta payaso",    "Surtido", "+4 pz",  "05/06/2026"),
     MovimientoHistorial(3,  "Chocolate",        "Ajuste",  "-14 pz", "04/06/2026"),
