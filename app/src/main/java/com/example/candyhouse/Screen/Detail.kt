@@ -14,6 +14,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.candyhouse.R
@@ -89,8 +91,37 @@ fun DetailScreen(
                 color = Color.Gray,
             )
         }
-    }
 
+
+        //emojis info
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            InfoChip(emoji = "🏷️", label = "Precio", value = producto.precio, chipColor = Color(0xFF29B6F6))
+            InfoChip(emoji = "📦", label = "Existencia", value = producto.existencia, chipColor = Color(0xFF66BB6A))
+            InfoChip(emoji = "📍", label = "Pasillo",    value = producto.pasillo,    chipColor = Color(0xFFFF9800))
+        }
+    }
+}
+@Composable
+fun InfoChip(emoji: String, label: String, value: String, chipColor: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(chipColor.copy(alpha = 0.15f))
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(emoji, fontSize = 20.sp)
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(label, fontSize = 10.sp, color = Color.Gray)
+        Text(value,  fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+    }
 }
 
     @Preview(showBackground = true)
