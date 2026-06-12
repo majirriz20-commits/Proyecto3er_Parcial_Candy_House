@@ -104,6 +104,35 @@ fun DetailScreen(
             InfoChip(emoji = "📦", label = "Existencia", value = producto.existencia, chipColor = Color(0xFF66BB6A))
             InfoChip(emoji = "📍", label = "Pasillo",    value = producto.pasillo,    chipColor = Color(0xFFFF9800))
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        HorizontalDivider(color = Color(0xFFEEEEEE))
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Proveedor
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Text("Proveedor", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(producto.proveedor, fontSize = 14.sp, color = Color.DarkGray)
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Categoría
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Text("Categoría", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(producto.categoria, fontSize = 14.sp, color = Color.DarkGray)
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Fecha de caducidad
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Text("Fecha de caducidad", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(producto.fechaCaducidad, fontSize = 14.sp, color = Color.DarkGray)
+        }
     }
 }
 @Composable
