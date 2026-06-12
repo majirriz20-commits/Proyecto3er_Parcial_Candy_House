@@ -15,6 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.border
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +43,7 @@ fun DetailScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .verticalScroll(rememberScrollState())
     ) {
 
         // imagn con el boton cerar
@@ -133,6 +137,76 @@ fun DetailScreen(
             Spacer(modifier = Modifier.height(2.dp))
             Text(producto.fechaCaducidad, fontSize = 14.sp, color = Color.DarkGray)
         }
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // ── Selector de cantidad ───────────────────────────────────
+        var cantidad by remember { mutableStateOf(1) }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Cantidad:", fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                IconButton(
+                    onClick = { if (cantidad > 1) cantidad-- },
+                    modifier = Modifier
+                        .size(32.dp)
+                        .border(1.5.dp, Color(0xFFFF3B7B), CircleShape)
+                ) {
+                    Text("−", fontSize = 18.sp, color = Color(0xFFFF3B7B), fontWeight = FontWeight.Bold)
+                }
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(4.dp))
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                ) {
+                    Text(text = cantidad.toString(), fontSize = 14.sp)
+                }
+                IconButton(
+                    onClick = { cantidad++ },
+                    modifier = Modifier
+                        .size(32.dp)
+                        .border(1.5.dp, Color(0xFFFF3B7B), CircleShape)
+                ) {
+                    Text("+", fontSize = 18.sp, color = Color(0xFFFF3B7B), fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // ── Botones Venta y Pedir ──────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107)),
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier.weight(1f).height(48.dp)
+            ) {
+                Text("🛒  Venta", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            }
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00D4FF)),
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier.weight(1f).height(48.dp)
+            ) {
+                Text("⊕  Pedir", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(80.dp))
     }
 }
 @Composable
