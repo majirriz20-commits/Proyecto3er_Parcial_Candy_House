@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,9 +22,23 @@ data class MovimientoHistorial(
     val fecha: String
 )
 
+
+private val datosEjemplo = listOf(
+    MovimientoHistorial(1,  "Gomitas de osito", "Venta",   "-14 pz", "hoy 14:30"),
+    MovimientoHistorial(2,  "Paleta payaso",    "Surtido", "+4 pz",  "05/06/2026"),
+    MovimientoHistorial(3,  "Chocolate",        "Ajuste",  "-14 pz", "04/06/2026"),
+    MovimientoHistorial(4,  "Gomitas de osito", "Venta",   "-14 pz", "hoy 14:30"),
+    MovimientoHistorial(5,  "Paleta payaso",    "Surtido", "+4 pz",  "05/06/2026"),
+    MovimientoHistorial(6,  "Chocolate",        "Ajuste",  "-14 pz", "04/06/2026"),
+    MovimientoHistorial(7,  "Gomitas de osito", "Venta",   "-14 pz", "hoy 14:30"),
+    MovimientoHistorial(8,  "Paleta payaso",    "Surtido", "+4 pz",  "05/06/2026"),
+    MovimientoHistorial(9,  "Chocolate",        "Ajuste",  "-14 pz", "04/06/2026"),
+    MovimientoHistorial(10, "Chocolate",        "Ajuste",  "-14 pz", "04/06/2026"),
+)
+
 @Composable
 fun HistorialScreen(
-    movimientos: List<MovimientoHistorial> = emptyList()
+    movimientos: List<MovimientoHistorial> = datosEjemplo
 ) {
     Column(
         modifier = Modifier
@@ -54,6 +70,25 @@ fun HistorialScreen(
         }
 
         HorizontalDivider(color = Color(0xFFEEEEEE))
+
+        // ── Lista de movimientos ───────────────────────────────────
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(movimientos, key = { it.id }) { movimiento ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(movimiento.producto, fontSize = 13.sp, modifier = Modifier.weight(1.2f), maxLines = 2)
+                    Text(movimiento.accion,   fontSize = 12.sp, modifier = Modifier.weight(0.8f))
+                    Text(movimiento.cantidad, fontSize = 12.sp, modifier = Modifier.weight(0.9f))
+                    Text(movimiento.fecha,    fontSize = 11.sp, modifier = Modifier.weight(0.9f), color = Color.Gray)
+                }
+                HorizontalDivider(color = Color(0xFFF5F5F5))
+            }
+            item { Spacer(modifier = Modifier.height(80.dp)) }
+        }
     }
 }
 
