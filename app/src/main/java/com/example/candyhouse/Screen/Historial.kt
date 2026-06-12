@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -36,6 +37,23 @@ fun HistorialScreen(
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // ── Encabezado de tabla ────────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("🍬 Producto",  fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1.2f))
+            Text("✏️ Acción",   fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(0.8f))
+            Text("📦 Cantidad", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(0.9f))
+            Text("📅 Fecha",    fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(0.9f))
+        }
+
+        HorizontalDivider(color = Color(0xFFEEEEEE))
     }
 }
 
