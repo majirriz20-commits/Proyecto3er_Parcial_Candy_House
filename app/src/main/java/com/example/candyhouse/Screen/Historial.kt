@@ -38,7 +38,9 @@ private val datosEjemplo = listOf(
 
 @Composable
 fun HistorialScreen(
-    movimientos: List<MovimientoHistorial> = datosEjemplo
+    movimientos: List<MovimientoHistorial> = datosEjemplo,
+    isLoading: Boolean = false,
+    error: String? = null
 ) {
     Column(
         modifier = Modifier
@@ -72,7 +74,35 @@ fun HistorialScreen(
         HorizontalDivider(color = Color(0xFFEEEEEE))
 
         // ── Lista de movimientos ───────────────────────────────────
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        // ── Estados: carga / error / vacío / datos ─────────────────
+        when {
+            isLoading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = Color(0xFFFF3B7B))
+                }
+            }
+            error != null -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("⚠️", fontSize = 40.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("No se pudo cargar el historial", color = Color.Gray, fontSize = 14.sp)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(error, color = Color.LightGray, fontSize = 12.sp)
+                    }
+                }
+            }
+            movimientos.isEmpty() -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("📋", fontSize = 40.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Sin movimientos todavía", color = Color.Gray, fontSize = 14.sp)
+                    }
+                }
+            }
+            else -> {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(movimientos, key = { it.id }) { movimiento ->
                 Row(
                     modifier = Modifier
@@ -96,7 +126,9 @@ fun HistorialScreen(
                 }
                 HorizontalDivider(color = Color(0xFFF5F5F5))
             }
-            item { Spacer(modifier = Modifier.height(80.dp)) }
+                    item { Spacer(modifier = Modifier.height(80.dp)) }
+                }
+            }
         }
     }
 }
