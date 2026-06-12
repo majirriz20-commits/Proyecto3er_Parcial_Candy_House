@@ -9,6 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
@@ -38,10 +40,11 @@ data class MovimientoHistorial(
 
 @Composable
 fun HistorialScreen(
-    movimientos: List<MovimientoHistorial> = datosEjemplo,
-    isLoading: Boolean = false,
-    error: String? = null
+    viewModel: HistorialViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    val movimientos by viewModel.movimientos.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -88,7 +91,7 @@ fun HistorialScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         Text("No se pudo cargar el historial", color = Color.Gray, fontSize = 14.sp)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(error, color = Color.LightGray, fontSize = 12.sp)
+                        Text(error ?: "", color = Color.LightGray, fontSize = 12.sp)
                     }
                 }
             }
