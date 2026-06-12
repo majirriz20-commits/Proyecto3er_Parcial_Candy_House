@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.candyhouse.components.CandyBottomBar
 import com.example.candyhouse.models.Product
 import com.example.candyhouse.services.RetrofitClient
 
@@ -189,9 +190,19 @@ fun InicioScreen() {
     Scaffold(
         topBar = {
             CandyTopBar()
+        },
+
+
+        bottomBar = {
+            CandyBottomBar(
+                pantallaActual = "inicio",
+                onTabSelected = { pantalla ->
+
+                }
+            )
         }
+
     ) { innerPadding ->
-        // 3. Le pasamos la lista (que ahora sí se va a llenar) a tus cuadros
         CandyGridContent(
             productos = listaDesdeApi,
             modifier = Modifier.padding(innerPadding)
