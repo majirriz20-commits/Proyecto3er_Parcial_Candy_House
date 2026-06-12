@@ -15,6 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.foundation.border
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -82,20 +84,46 @@ fun DetailScreen(
             }
         }
         //nombre y codig
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = producto.nombre,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-            Text(
-                text = producto.codigo,
-                fontSize = 13.sp,
-                color = Color.Gray,
-            )
+        // ── Nombre, código y botones ───────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = producto.nombre,
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Text(
+                    text = producto.codigo,
+                    fontSize = 13.sp,
+                    color = Color.Gray
+                )
+            }
+            // Botón editar
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Editar",
+                    tint = Color(0xFFFF3B7B),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            // Botón eliminar
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Eliminar",
+                    tint = Color(0xFFFFC107),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
-
 
         //emojis info
         Row(
