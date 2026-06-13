@@ -164,22 +164,27 @@ fun FiltrosScreen(
             // 4. Proveedores
             FiltroDesplegable(titulo = "Proveedores") {
                 val proveedores = listOf(
-                    "Dulcerías Denny", "Dulcería La Providencia",
-                    "Dulcerías y Abarroteras Vázquez", "Dulcerías El Payaso (Produlce)",
-                    "Azúcar Dulcerías", "Tienda de la Rosa"
+                    "Dulceria Denny",
+                    "Dulceria La Providencia",
+                    "Dulcerias y Abarroteras Vazquez",
+                    "Dulceria El Payaso (Produlce)",
+                    "Azucar Dulcerias",
+                    "Tienda de la Rosa"
                 )
                 Column {
                     proveedores.forEach { pro ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { proveedorSeleccionado = pro }
+                                .clickable { viewModel.proveedorSeleccionado = pro }
                                 .padding(vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Checkbox(
-                                checked = proveedorSeleccionado == pro,
-                                onCheckedChange = { if (it) proveedorSeleccionado = pro else proveedorSeleccionado = "" }
+                                checked = viewModel.proveedorSeleccionado == pro,
+                                onCheckedChange = { isChecked ->
+                                    viewModel.proveedorSeleccionado = if (isChecked) pro else ""
+                                }
                             )
                             Text(text = pro, color = Color.Black, fontSize = 14.sp)
                         }
@@ -198,7 +203,6 @@ fun FiltrosScreen(
                 OutlinedButton(
                     onClick = {
                         viewModel.limpiarFiltros()
-                        proveedorSeleccionado = ""
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Gray),

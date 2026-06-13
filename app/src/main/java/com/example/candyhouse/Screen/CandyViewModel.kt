@@ -22,6 +22,8 @@ class CandyViewModel : ViewModel() {
     var selectOptimo by mutableStateOf(false)
     var selectBajo by mutableStateOf(false)
 
+    var proveedorSeleccionado by mutableStateOf("")
+
     val productosFiltrados: List<Product>
         get() {
             var lista = listaDesdeApi
@@ -45,6 +47,10 @@ class CandyViewModel : ViewModel() {
                 lista = lista.filter { (selectOptimo && it.estado == "Optimo") || (selectBajo && it.estado == "Bajo") }
             }
 
+            // Proveedor
+            if (proveedorSeleccionado.isNotEmpty()) {
+                lista = lista.filter { it.proveedor == proveedorSeleccionado }            }
+
             return lista
         }
 
@@ -65,6 +71,7 @@ class CandyViewModel : ViewModel() {
         rangoPrecio = 1f..2000f
         selectOptimo = false
         selectBajo = false
+        proveedorSeleccionado = ""
         textoBusqueda = ""
         buscando = false
     }
