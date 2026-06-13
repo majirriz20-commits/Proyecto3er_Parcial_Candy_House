@@ -1,6 +1,5 @@
 package com.example.candyhouse.services
 
-import com.example.candyhouse.models.Product
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
