@@ -60,7 +60,38 @@ fun CandyTopBar() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+<<<<<<< Updated upstream
             IconButton(onClick = { /* TODO: Abrir menú lateral */ }) {
+=======
+            IconButton(onClick = onMenuClick) {
+                Icon(Icons.Default.Menu, "Menú", tint = Color.Black, modifier = Modifier.size(28.dp))
+            }
+
+            if (viewModel.buscando) {
+                TextField(
+                    value = viewModel.textoBusqueda,
+                    onValueChange = { viewModel.textoBusqueda = it },
+                    placeholder = { Text("Buscar...") },
+                    shape = CircleShape,
+                    modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                    singleLine = true,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    )
+                )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+
+            IconButton(onClick = {
+                if (viewModel.buscando) {
+                    viewModel.limpiarFiltros()
+                } else {
+                    viewModel.buscando = true
+                }
+            }) {
+>>>>>>> Stashed changes
                 Icon(
                     imageVector = Icons.Default.Menu,
                     contentDescription = "Menú",
