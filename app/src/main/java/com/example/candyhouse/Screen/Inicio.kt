@@ -1,5 +1,6 @@
 package com.example.candyhouse.Screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,10 +30,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,7 +44,7 @@ import com.example.candyhouse.models.Product
 import com.example.candyhouse.services.RetrofitClient
 
 @Composable
-fun CandyTopBar(onMenuClick: () -> Unit) { //
+fun CandyTopBar(onMenuClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,9 +87,6 @@ fun CandyTopBar(onMenuClick: () -> Unit) { //
     }
 }
 
-
-
-// 2. Tarjetas
 @Composable
 fun DulceCard(producto: Product) {
     Card(
@@ -153,7 +147,6 @@ fun DulceCard(producto: Product) {
     }
 }
 
-
 @Composable
 fun CandyGridContent(
     productos: List<Product>,
@@ -172,17 +165,13 @@ fun CandyGridContent(
     }
 }
 
-
-
-
 @Composable
-fun InicioScreen(onIrAFiltros: () -> Unit) {
-    var listaDesdeApi by remember { mutableStateOf(emptyList<Product>()) }
+fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
 
     LaunchedEffect(Unit) {
         try {
             val resultado = RetrofitClient.instance.getAllProducts()
-            listaDesdeApi = resultado
+            viewModel.listaDesdeApi = resultado
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -197,14 +186,13 @@ fun InicioScreen(onIrAFiltros: () -> Unit) {
                 pantallaActual = "inicio",
                 onTabSelected = { pantalla ->
                     if (pantalla == "carrito") {
-
                     }
                 }
             )
         }
     ) { innerPadding ->
         CandyGridContent(
-            productos = listaDesdeApi,
+            productos = viewModel.productosFiltrados,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -212,8 +200,14 @@ fun InicioScreen(onIrAFiltros: () -> Unit) {
 
 
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun InicioScreenPreview() {
-    InicioScreen(onIrAFiltros = {})
+    val viewModelFalso = CandyViewModel()
+
+    InicioScreen(
+        onIrAFiltros = {},
+        viewModel = viewModelFalso
+    )
 }

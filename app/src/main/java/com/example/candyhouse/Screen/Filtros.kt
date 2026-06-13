@@ -1,5 +1,6 @@
 package com.example.candyhouse.Screen
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -15,16 +16,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,29 +39,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.candyhouse.components.CandyBottomBar
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltrosScreen(
-    onIrAInicio: () -> Unit
+    onIrAInicio: () -> Unit,
+    viewModel: CandyViewModel
 ) {
-    var selectGomitas by remember { mutableStateOf(false) }
-    var selectChocolates by remember { mutableStateOf(false) }
-    var selectRefrescos by remember { mutableStateOf(false) }
-    var selectImportados by remember { mutableStateOf(false) }
-
-    var rangoPrecio by remember { mutableStateOf(1f..2000f) }
-
-    var selectOptimo by remember { mutableStateOf(false) }
-    var selectBajo by remember { mutableStateOf(false) }
-
     var proveedorSeleccionado by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
-            CandyTopBar(onMenuClick = onIrAInicio)
+            TopAppBar(
+                title = { Text("Filtros", fontSize = 20.sp, fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = onIrAInicio) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Regresar")
+                    }
+                }
+            )
         },
         bottomBar = {
             CandyBottomBar(
@@ -81,19 +87,31 @@ fun FiltrosScreen(
             FiltroDesplegable(titulo = "Categorías") {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(checked = selectGomitas, onCheckedChange = { selectGomitas = it })
+                        Checkbox(
+                            checked = viewModel.selectGomitas,
+                            onCheckedChange = { viewModel.selectGomitas = it }
+                        )
                         Text("Gomitas", color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(checked = selectChocolates, onCheckedChange = { selectChocolates = it })
+                        Checkbox(
+                            checked = viewModel.selectChocolates,
+                            onCheckedChange = { viewModel.selectChocolates = it }
+                        )
                         Text("Chocolates", color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(checked = selectRefrescos, onCheckedChange = { selectRefrescos = it })
-                        Text("Refrescos", color = Color.Black)
+                        Checkbox(
+                            checked = viewModel.selectBebidas,
+                            onCheckedChange = { viewModel.selectBebidas = it }
+                        )
+                        Text("Bebidas", color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(checked = selectImportados, onCheckedChange = { selectImportados = it })
+                        Checkbox(
+                            checked = viewModel.selectImportados,
+                            onCheckedChange = { viewModel.selectImportados = it }
+                        )
                         Text("Importados", color = Color.Black)
                     }
                 }
@@ -103,17 +121,16 @@ fun FiltrosScreen(
             FiltroDesplegable(titulo = "Precios") {
                 Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)) {
                     Text(
-                        text = "Rangos: \$${rangoPrecio.start.toInt()} - \$${rangoPrecio.endInclusive.toInt()}",
+                        text = "Rangos: \$${viewModel.rangoPrecio.start.toInt()} - \$${viewModel.rangoPrecio.endInclusive.toInt()}",
                         fontSize = 14.sp,
                         color = Color.DarkGray,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
-                    // 🌟 AQUÍ ESTÁ EL CAMBIO: Usamos RangeSlider para tener las 2 bolitas
                     androidx.compose.material3.RangeSlider(
-                        value = rangoPrecio,
+                        value = viewModel.rangoPrecio,
                         onValueChange = { nuevoRango ->
-                            rangoPrecio = nuevoRango
+                            viewModel.rangoPrecio = nuevoRango
                         },
                         valueRange = 1f..2000f,
                         colors = androidx.compose.material3.SliderDefaults.colors(
@@ -128,11 +145,17 @@ fun FiltrosScreen(
             FiltroDesplegable(titulo = "Stock") {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(checked = selectOptimo, onCheckedChange = { selectOptimo = it })
+                        Checkbox(
+                            checked = viewModel.selectOptimo,
+                            onCheckedChange = { viewModel.selectOptimo = it }
+                        )
                         Text("Óptimo", color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(checked = selectBajo, onCheckedChange = { selectBajo = it })
+                        Checkbox(
+                            checked = viewModel.selectBajo,
+                            onCheckedChange = { viewModel.selectBajo = it }
+                        )
                         Text("Bajo", color = Color.Black)
                     }
                 }
@@ -172,16 +195,9 @@ fun FiltrosScreen(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-
                 OutlinedButton(
                     onClick = {
-                        selectGomitas = false
-                        selectChocolates = false
-                        selectRefrescos = false
-                        selectImportados = false
-                        rangoPrecio = 1f..2000f
-                        selectOptimo = false
-                        selectBajo = false
+                        viewModel.limpiarFiltros()
                         proveedorSeleccionado = ""
                     },
                     modifier = Modifier.weight(1f),
@@ -249,4 +265,15 @@ fun FiltroDesplegable(
 
         HorizontalDivider(color = Color(0xFFE0E0E0), thickness = 1.dp)
     }
+}
+
+@SuppressLint("ViewModelConstructorInComposable")
+@Preview(showBackground = true)
+@Composable
+fun FiltrosScreenPreview() {
+    val viewModelFalso = CandyViewModel()
+    FiltrosScreen(
+        onIrAInicio = {},
+        viewModel = viewModelFalso
+    )
 }
