@@ -15,11 +15,23 @@ fun NavGraph(
         startDestination = "inicio"
     ) {
         composable("inicio") {
-            InicioScreen()
+            InicioScreen(
+                onIrAFiltros = { navController.navigate("filtros") }
+            )
         }
+
+        composable("filtros") {
+            FiltrosScreen(
+                onIrAInicio = { navController.navigate("inicio") }
+            )
+        }
+
+
         composable("historial") {
             HistorialScreen()
         }
+
+
         composable("detail") {
             DetailScreen(
                 onClose = { navController.popBackStack() }

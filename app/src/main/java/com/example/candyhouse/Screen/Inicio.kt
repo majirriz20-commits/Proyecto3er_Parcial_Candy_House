@@ -46,7 +46,7 @@ import com.example.candyhouse.models.Product
 import com.example.candyhouse.services.RetrofitClient
 
 @Composable
-fun CandyTopBar() {
+fun CandyTopBar(onMenuClick: () -> Unit) { //
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,13 +54,12 @@ fun CandyTopBar() {
             .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        // 1. HEADER
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* TODO: Abrir menú lateral */ }) {
+            IconButton(onClick = onMenuClick) {
                 Icon(
                     imageVector = Icons.Default.Menu,
                     contentDescription = "Menú",
@@ -68,7 +67,7 @@ fun CandyTopBar() {
                     modifier = Modifier.size(28.dp)
                 )
             }
-            IconButton(onClick = { /* TODO: Acción de búsqueda */ }) {
+            IconButton(onClick = { }) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Buscar",
@@ -173,14 +172,14 @@ fun CandyGridContent(
 
 
 
+
 @Composable
-fun InicioScreen() {
+fun InicioScreen(onIrAFiltros: () -> Unit) {
     var listaDesdeApi by remember { mutableStateOf(emptyList<Product>()) }
 
     LaunchedEffect(Unit) {
         try {
             val resultado = RetrofitClient.instance.getAllProducts()
-
             listaDesdeApi = resultado
         } catch (e: Exception) {
             e.printStackTrace()
@@ -189,19 +188,18 @@ fun InicioScreen() {
 
     Scaffold(
         topBar = {
-            CandyTopBar()
+            CandyTopBar(onMenuClick = onIrAFiltros)
         },
-
-
         bottomBar = {
             CandyBottomBar(
                 pantallaActual = "inicio",
                 onTabSelected = { pantalla ->
+                    if (pantalla == "carrito") {
 
+                    }
                 }
             )
         }
-
     ) { innerPadding ->
         CandyGridContent(
             productos = listaDesdeApi,
@@ -211,8 +209,9 @@ fun InicioScreen() {
 }
 
 
+
 @Preview(showBackground = true)
 @Composable
 fun InicioScreenPreview() {
-    InicioScreen()
+    InicioScreen(onIrAFiltros = {})
 }

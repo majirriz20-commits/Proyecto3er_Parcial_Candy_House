@@ -54,6 +54,7 @@ fun CandyBottomBar(
             )
         )
 
+        // 3. Botón Central
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -88,11 +89,12 @@ fun CandyBottomBar(
             )
         )
 
-        // 5. Botón de Filtros
+        // 5. Botón de Carrito
         NavigationBarItem(
-            selected = pantallaActual == "filtros",
-            onClick = { onTabSelected("filtros") },
-            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Filtros", modifier = Modifier.size(26.dp)) },
+            // 🌟 CAMBIO AQUÍ: Ahora solo se va a seleccionar si estás textualmente en la pantalla "carrito"
+            selected = pantallaActual == "carrito",
+            onClick = { onTabSelected("carrito") },
+            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito", modifier = Modifier.size(26.dp)) },
             colors = NavigationBarItemDefaults.colors(
                 indicatorColor = Color.Transparent,
                 selectedIconColor = Color(0xFF00E5FF),
