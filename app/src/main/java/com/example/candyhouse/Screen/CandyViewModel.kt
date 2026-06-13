@@ -9,49 +9,53 @@ import com.example.candyhouse.models.Product
 class CandyViewModel : ViewModel() {
     var listaDesdeApi by mutableStateOf(emptyList<Product>())
 
-    // 🌟 ESTADOS GLOBALES DE LOS FILTROS
+    // Estados de búsqueda
+    var textoBusqueda by mutableStateOf("")
+    var buscando by mutableStateOf(false)
+
+    // Estados de filtros
     var selectGomitas by mutableStateOf(false)
     var selectChocolates by mutableStateOf(false)
     var selectBebidas by mutableStateOf(false)
     var selectImportados by mutableStateOf(false)
-
     var rangoPrecio by mutableStateOf(1f..2000f)
-
     var selectOptimo by mutableStateOf(false)
     var selectBajo by mutableStateOf(false)
 
-    // Lógica inteligente de filtrado reactivo
     val productosFiltrados: List<Product>
         get() {
-            var listaFiltrada = listaDesdeApi
+            var lista = listaDesdeApi
 
-            // 1. Filtrar por Categorías
+            // Categorías
             if (selectGomitas || selectChocolates || selectBebidas || selectImportados) {
-                listaFiltrada = listaFiltrada.filter { producto ->
-                    val nombre = producto.nombre.lowercase()
-                    (selectGomitas && nombre.contains("gomita")) ||
-                            (selectChocolates && (nombre.contains("chocolate") || nombre.contains("m&m") || nombre.contains("trufa") || nombre.contains("kisses"))) ||
-                            (selectBebidas && (nombre.contains("bebida") || nombre.contains("refresco") || nombre.contains("gatorade"))) ||
-                            (selectImportados && nombre.contains("importado"))
+                lista = lista.filter { p ->
+                    val n = p.nombre.lowercase()
+                    (selectGomitas && n.contains("gomita")) ||
+                            (selectChocolates && (n.contains("chocolate") || n.contains("m&m") || n.contains("trufa") || n.contains("kisses"))) ||
+                            (selectBebidas && (n.contains("bebida") || n.contains("refresco") || n.contains("gatorade"))) ||
+                            (selectImportados && n.contains("importado"))
                 }
             }
 
-            // 2. Filtrar por Rango de Precio
-            listaFiltrada = listaFiltrada.filter { producto ->
-                producto.precio >= rangoPrecio.start && producto.precio <= rangoPrecio.endInclusive
-            }
+            // Precio
+            lista = lista.filter { it.precio in rangoPrecio }
 
-            // 3. Filtrar por Stock
+            // Stock
             if (selectOptimo || selectBajo) {
-                listaFiltrada = listaFiltrada.filter { producto ->
-                    (selectOptimo && producto.estado == "Optimo") ||
-                            (selectBajo && producto.estado == "Bajo")
-                }
+                lista = lista.filter { (selectOptimo && it.estado == "Optimo") || (selectBajo && it.estado == "Bajo") }
             }
 
-            return listaFiltrada
+            return lista
         }
 
+    val productosFiltradosBusqueda: List<Product>
+        get() {
+            return if (textoBusqueda.isEmpty()) {
+                productosFiltrados
+            } else {
+                productosFiltrados.filter { it.nombre.contains(textoBusqueda, ignoreCase = true) }
+            }
+        }
 
     fun limpiarFiltros() {
         selectGomitas = false
@@ -61,5 +65,7 @@ class CandyViewModel : ViewModel() {
         rangoPrecio = 1f..2000f
         selectOptimo = false
         selectBajo = false
+        textoBusqueda = ""
+        buscando = false
     }
 }

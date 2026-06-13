@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -28,6 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -43,8 +46,10 @@ import com.example.candyhouse.components.CandyBottomBar
 import com.example.candyhouse.models.Product
 import com.example.candyhouse.services.RetrofitClient
 
+
+
 @Composable
-fun CandyTopBar(onMenuClick: () -> Unit) {
+fun CandyTopBar(onMenuClick: () -> Unit, viewModel: CandyViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -58,34 +63,54 @@ fun CandyTopBar(onMenuClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onMenuClick) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Menú",
-                    tint = Color.Black,
-                    modifier = Modifier.size(28.dp)
-                )
+                Icon(Icons.Default.Menu, "Menú", tint = Color.Black, modifier = Modifier.size(28.dp))
             }
-            IconButton(onClick = { }) {
+
+            if (viewModel.buscando) {
+                TextField(
+                    value = viewModel.textoBusqueda,
+                    onValueChange = { viewModel.textoBusqueda = it },
+                    placeholder = { Text("Buscar...") },
+                    modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                    singleLine = true,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    )
+                )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+
+            IconButton(onClick = {
+                if (viewModel.buscando) {
+                    viewModel.limpiarFiltros()
+                } else {
+                    viewModel.buscando = true
+                }
+            }) {
                 Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Buscar",
+                    imageVector = if (viewModel.buscando) Icons.Default.Close else Icons.Default.Search,
+                    contentDescription = if (viewModel.buscando) "Cerrar" else "Buscar",
                     tint = Color.Black,
                     modifier = Modifier.size(28.dp)
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = "Candy House",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Normal,
-            color = Color.Black,
-            modifier = Modifier.padding(start = 12.dp, bottom = 12.dp)
-        )
+        if (!viewModel.buscando) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Candy House",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Black,
+                modifier = Modifier.padding(start = 12.dp, bottom = 12.dp)
+            )
+        }
     }
 }
+
 
 @Composable
 fun DulceCard(producto: Product) {
@@ -165,6 +190,8 @@ fun CandyGridContent(
     }
 }
 
+
+
 @Composable
 fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
 
@@ -179,19 +206,19 @@ fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
 
     Scaffold(
         topBar = {
-            CandyTopBar(onMenuClick = onIrAFiltros)
+            CandyTopBar(
+                onMenuClick = onIrAFiltros,
+                viewModel = viewModel
+            )
         },
         bottomBar = {
             CandyBottomBar(
                 pantallaActual = "inicio",
-                onTabSelected = { pantalla ->
-                    if (pantalla == "carrito") {
-                    }
-                }
+                onTabSelected = { pantalla -> /* ... */ }
             )
         }
     ) { innerPadding ->
-        if (viewModel.productosFiltrados.isEmpty()) {
+        if (viewModel.productosFiltradosBusqueda.isEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -200,9 +227,11 @@ fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+
                 Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
-                    text = "No se encontraron dulces con esos filtros",
+                    text = "No se encontraron resultados",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Gray
@@ -210,7 +239,7 @@ fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
             }
         } else {
             CandyGridContent(
-                productos = viewModel.productosFiltrados,
+                productos = viewModel.productosFiltradosBusqueda,
                 modifier = Modifier.padding(innerPadding)
             )
         }
@@ -219,12 +248,12 @@ fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
 
 
 
+
 @SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun InicioScreenPreview() {
     val viewModelFalso = CandyViewModel()
-
     InicioScreen(
         onIrAFiltros = {},
         viewModel = viewModelFalso
