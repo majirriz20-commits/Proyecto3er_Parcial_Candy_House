@@ -108,12 +108,21 @@ fun FiltrosScreen(
                     Text(
                         text = "Rangos: \$${rangoPrecio.start.toInt()} - \$${rangoPrecio.endInclusive.toInt()}",
                         fontSize = 14.sp,
-                        color = Color.DarkGray
+                        color = Color.DarkGray,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    Slider(
-                        value = rangoPrecio.endInclusive,
-                        onValueChange = { rangoPrecio = 1f..it },
-                        valueRange = 1f..2000f
+
+                    // 🌟 AQUÍ ESTÁ EL CAMBIO: Usamos RangeSlider para tener las 2 bolitas
+                    androidx.compose.material3.RangeSlider(
+                        value = rangoPrecio,
+                        onValueChange = { nuevoRango ->
+                            rangoPrecio = nuevoRango
+                        },
+                        valueRange = 1f..2000f,
+                        colors = androidx.compose.material3.SliderDefaults.colors(
+                            activeTrackColor = Color(0xFFFF4081),
+                            thumbColor = Color(0xFFFF4081)
+                        )
                     )
                 }
             }
