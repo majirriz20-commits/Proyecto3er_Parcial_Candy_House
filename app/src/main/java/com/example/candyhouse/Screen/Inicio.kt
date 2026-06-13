@@ -191,10 +191,29 @@ fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
             )
         }
     ) { innerPadding ->
-        CandyGridContent(
-            productos = viewModel.productosFiltrados,
-            modifier = Modifier.padding(innerPadding)
-        )
+        if (viewModel.productosFiltrados.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(innerPadding)
+                    .padding(top = 64.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "No se encontraron dulces con esos filtros",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Gray
+                )
+            }
+        } else {
+            CandyGridContent(
+                productos = viewModel.productosFiltrados,
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }
 

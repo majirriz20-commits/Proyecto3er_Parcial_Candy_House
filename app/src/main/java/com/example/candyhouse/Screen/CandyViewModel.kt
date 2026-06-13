@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.example.candyhouse.models.Product
 
 class CandyViewModel : ViewModel() {
-    // Aquí se guarda la lista cruda que llega de Node.js
     var listaDesdeApi by mutableStateOf(emptyList<Product>())
 
     // 🌟 ESTADOS GLOBALES DE LOS FILTROS
