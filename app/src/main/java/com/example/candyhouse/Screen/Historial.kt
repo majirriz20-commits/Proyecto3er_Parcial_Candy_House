@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import models.HistorialViewModel
 
 data class MovimientoHistorial(
     val id: Int,

@@ -4,7 +4,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.candyhouse.models.Product
+import com.example.candyhouse.services.CartRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 
 class CandyViewModel : ViewModel() {
     var listaDesdeApi by mutableStateOf(emptyList<Product>())
@@ -76,4 +80,11 @@ class CandyViewModel : ViewModel() {
         textoBusqueda = ""
         buscando = false
     }
+
+    //Funcion exclusivamente para carrito de compras
+    val cartItem = CartRepository.cartItems.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 }
