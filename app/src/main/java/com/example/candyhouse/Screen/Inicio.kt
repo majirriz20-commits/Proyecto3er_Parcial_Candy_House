@@ -1,51 +1,38 @@
 package com.example.candyhouse.Screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.candyhouse.components.CandyBottomBar
 import com.example.candyhouse.models.Product
 import com.example.candyhouse.services.RetrofitClient
+import com.example.candyhouse.viewmodel.CandyViewModel
 
+
+// 1. HEADER
 @Composable
-fun CandyTopBar() {
+fun CandyTopBar(onMenuClick: () -> Unit, viewModel: CandyViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,13 +40,12 @@ fun CandyTopBar() {
             .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        // 1. HEADER
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* TODO: Abrir menú lateral */ }) {
+            IconButton(onClick = onMenuClick) {
                 Icon(
                     imageVector = Icons.Default.Menu,
                     contentDescription = "Menú",
@@ -67,7 +53,48 @@ fun CandyTopBar() {
                     modifier = Modifier.size(28.dp)
                 )
             }
-            IconButton(onClick = { /* TODO: Acción de búsqueda */ }) {
+
+            if (viewModel.buscando) {
+                TextField(
+                    value = viewModel.textoBusqueda,
+                    onValueChange = { viewModel.textoBusqueda = it },
+                    placeholder = { Text("Buscar...") },
+                    shape = CircleShape,
+                    modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                    singleLine = true,
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            if (viewModel.textoBusqueda.isNotEmpty()) {
+                                viewModel.textoBusqueda = ""
+                            } else {
+                                viewModel.buscando = false
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Limpiar o cerrar",
+                                tint = Color.Gray
+                            )
+                        }
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    )
+                )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+
+            IconButton(onClick = {
+                if (viewModel.buscando) {
+                    viewModel.buscando = false
+                } else {
+                    viewModel.buscando = true
+                }
+            }) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Buscar",
@@ -77,21 +104,22 @@ fun CandyTopBar() {
             }
         }
 
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = "Candy House",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Normal,
-            color = Color.Black,
-            modifier = Modifier.padding(start = 12.dp, bottom = 12.dp)
-        )
+        if (!viewModel.buscando) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Candy House",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
+            )
+        }
     }
 }
 
 
+// 2. TARJETAS INDIVIDUAL
 
-// 2. Tarjetas
 @Composable
 fun DulceCard(producto: Product) {
     Card(
@@ -108,7 +136,8 @@ fun DulceCard(producto: Product) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
-                    .background(Color(0xFFD9D9D9), shape = RoundedCornerShape(8.dp))
+                    .background(Color.White, shape = RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Fit
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -151,7 +180,6 @@ fun DulceCard(producto: Product) {
     }
 }
 
-
 @Composable
 fun CandyGridContent(
     productos: List<Product>,
@@ -165,22 +193,20 @@ fun CandyGridContent(
         modifier = modifier.background(Color.White)
     ) {
         items(productos) { dulce ->
+
+            // 2. TARJETAS
             DulceCard(producto = dulce)
         }
     }
 }
 
-
-
 @Composable
-fun InicioScreen() {
-    var listaDesdeApi by remember { mutableStateOf(emptyList<Product>()) }
+fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
 
     LaunchedEffect(Unit) {
         try {
             val resultado = RetrofitClient.instance.getAllProducts()
-
-            listaDesdeApi = resultado
+            viewModel.listaDesdeApi = resultado
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -188,20 +214,56 @@ fun InicioScreen() {
 
     Scaffold(
         topBar = {
-            CandyTopBar()
+
+            // 1. HEADER
+            CandyTopBar(onMenuClick = onIrAFiltros, viewModel = viewModel)
+        },
+        bottomBar = {
+
+            // 3. BARRA
+            CandyBottomBar(
+                pantallaActual = "inicio",
+                onTabSelected = { pantalla ->
+                    if (pantalla == "carrito") {
+                        // TODO: Lógica de navegación
+                    }
+                }
+            )
         }
     ) { innerPadding ->
-        // 3. Le pasamos la lista (que ahora sí se va a llenar) a tus cuadros
-        CandyGridContent(
-            productos = listaDesdeApi,
-            modifier = Modifier.padding(innerPadding)
-        )
+        if (viewModel.productosFiltradosBusqueda.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(innerPadding)
+                    .padding(top = 64.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "No se encontraron dulces",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Gray
+                )
+            }
+        } else {
+            CandyGridContent(
+                productos = viewModel.productosFiltradosBusqueda,
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }
 
-
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun InicioScreenPreview() {
-    InicioScreen()
+    val viewModelFalso = CandyViewModel()
+    InicioScreen(
+        onIrAFiltros = {},
+        viewModel = viewModelFalso
+    )
 }

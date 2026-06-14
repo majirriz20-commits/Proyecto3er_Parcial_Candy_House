@@ -7,9 +7,14 @@ data class Product(
     val nombre: String,
     val precio: Double,
     val estado: String,
+    val categoria: String,
+
     @SerializedName("imageUrl") val imageUrl: String,
-    val proveedor: String = "",
-    val existencia: String = "",
-    val pasillo: String = "",
-    val fechaCaducidad: String = ""
+
+    val proveedor: String,
+    val existencia: String,
+    val pasillo: String,
+    val fechaCaducidad: String,
+
+    val cantidad: Double
 )

@@ -24,21 +24,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.candyhouse.R
+import com.example.candyhouse.models.Product
+import com.example.candyhouse.services.CartRepository
 
-data class Producto(
-    val nombre: String = "Gomitas de oso",
-    val codigo: String = "01545789",
-    val precio: String = "\$15.00 kg",
-    val existencia: String = "150 pz",
-    val pasillo: String = "B-04",
-    val proveedor: String = "Dulcería Denny",
-    val categoria: String = "Gomitas",
-    val fechaCaducidad: String = "05/2028"
-)
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    producto: Producto = Producto(),
+    producto: Product = Product(
+        id = 1,
+        nombre = "Gomitas de oso",
+        precio = 15.00,
+        estado = "Optimo",
+        categoria = "Gomitas",
+        imageUrl = "",
+        proveedor = "Dulcería Denny",
+        existencia = "150 pz",
+        pasillo = "B-04",
+        fechaCaducidad = "05/2028",
+        cantidad = 150.0
+    ),
     onClose: () -> Unit = {}
 ) {
     Column(
@@ -84,7 +88,6 @@ fun DetailScreen(
             }
         }
         //nombre y codig
-        // ── Nombre, código y botones ───────────────────────────────
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -100,7 +103,7 @@ fun DetailScreen(
                     color = Color.Black
                 )
                 Text(
-                    text = producto.codigo,
+                    text = "ID: ${producto.id}",
                     fontSize = 13.sp,
                     color = Color.Gray
                 )
@@ -132,7 +135,7 @@ fun DetailScreen(
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            InfoChip(emoji = "🏷️", label = "Precio", value = producto.precio, chipColor = Color(0xFF29B6F6))
+            InfoChip(emoji = "🏷️", label = "Precio", value = "$${producto.precio}", chipColor = Color(0xFF29B6F6))
             InfoChip(emoji = "📦", label = "Existencia", value = producto.existencia, chipColor = Color(0xFF66BB6A))
             InfoChip(emoji = "📍", label = "Pasillo",    value = producto.pasillo,    chipColor = Color(0xFFFF9800))
         }
@@ -167,7 +170,6 @@ fun DetailScreen(
         }
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ── Selector de cantidad ───────────────────────────────────
         var cantidad by remember { mutableStateOf(1) }
         Row(
             modifier = Modifier
@@ -209,7 +211,6 @@ fun DetailScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ── Botones Venta y Pedir ──────────────────────────────────
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -217,7 +218,12 @@ fun DetailScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Button(
-                onClick = { },
+                onClick = {
+                    CartRepository.addProductCart(
+                        product = producto,
+                        cantidad = cantidad.toDouble()
+                    )
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107)),
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier.weight(1f).height(48.dp)
