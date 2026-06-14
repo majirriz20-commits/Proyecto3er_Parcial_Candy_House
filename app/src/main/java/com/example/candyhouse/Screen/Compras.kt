@@ -29,6 +29,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -58,6 +60,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.candyhouse.components.CandyBottomBar
 import com.example.candyhouse.models.Product
 import com.example.candyhouse.ui.theme.CandyHouseTheme
 import models.HistorialViewModel
@@ -82,6 +85,14 @@ fun ComprasScreen(
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = BackgroundCandy)
+            )
+        },
+        //BOTONES DE ABAJO
+        bottomBar = {
+            CandyBottomBar(
+                pantallaActual = "compras",
+                onTabSelected = { pantalla ->
+                }
             )
         },
         containerColor = BackgroundCandy
@@ -120,6 +131,66 @@ fun ComprasScreen(
                         color = Color.Black
                     )
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Forma de pago",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                // Opción A: EFECTIVO
+                Surface(
+                    onClick = { selectedPaymentMethod = "Efectivo" },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray),
+                    color = Color.White
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (selectedPaymentMethod == "Efectivo"),
+                            onClick = { selectedPaymentMethod = "Efectivo" },
+                            colors = RadioButtonDefaults.colors(selectedColor = Color.Gray)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(text = "Efectivo", fontSize = 16.sp, color = Color.Black)
+                    }
+                }
+
+                // Opción B: TARJETA
+                Surface(
+                    onClick = { selectedPaymentMethod = "Tarjeta" },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray),
+                    color = Color.White
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (selectedPaymentMethod == "Tarjeta"),
+                            onClick = { selectedPaymentMethod = "Tarjeta" },
+                            colors = RadioButtonDefaults.colors(selectedColor = Color.Gray)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(text = "Tarjeta", fontSize = 16.sp, color = Color.Black)
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 //Boton de pago
@@ -237,11 +308,11 @@ fun CartItemRow(item: CartItem){
 
 //PARA PRUEBA
 
-@Preview(showBackground = true, showSystemUi = true)
+/*@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ShoppingCartPreview() {
-    // 1. Creamos un producto de prueba usando el modelo oficial de tu equipo
-    val productoPrueba1 = Product(
+fun ComprasPreview() {
+    // 1. Creamos objetos de prueba con todos los campos obligatorios del modelo real
+    val productoPrueba1 = com.example.candyhouse.models.Product(
         id = 1,
         nombre = "Gomitas de osito",
         precio = 15.00,
@@ -255,7 +326,7 @@ fun ShoppingCartPreview() {
         cantidad = 150.0
     )
 
-    val productoPrueba2 = Product(
+    val productoPrueba2 = com.example.candyhouse.models.Product(
         id = 2,
         nombre = "Paleta payaso",
         precio = 25.00,
@@ -266,34 +337,54 @@ fun ShoppingCartPreview() {
         existencia = "40 pz",
         pasillo = "A-02",
         fechaCaducidad = "10/2027",
-        cantidad = 40.00,
+        cantidad = 40.0
     )
 
-    // 2. Metemos los productos dentro del molde CartItem
+    // 2. Armamos la lista falsa dentro del molde de CartItem
     val listaPrueba = listOf(
-        CartItem(id = 1, product = productoPrueba1, cantidadSeleccionada = 2.5),
-        CartItem(id = 2, product = productoPrueba2, cantidadSeleccionada = 1.0)
+        com.example.candyhouse.models.CartItem(id = 1, product = productoPrueba1, cantidadSeleccionada = 2.5),
+        com.example.candyhouse.models.CartItem(id = 2, product = productoPrueba2, cantidadSeleccionada = 1.0)
     )
 
-    // 3. Dibujamos la estructura de la pantalla pasándole la lista estática
-    // NOTA: Si modificaste tu ShoppingCartScreen para que acepte una lista por defecto, se la pasas aquí.
-    // Si tu Scaffold está limpio, puedes llamar a tu componente contenedor directo:
-    CandyHouseTheme {
-        // Aquí llamamos al contenedor de tu pantalla.
-        // Si te marca error por el ViewModel, puedes rodear el diseño de tu LazyColumn aquí adentro para verlo:
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = BackgroundCandy
+    // 3. Dibujamos la estructura simulada para el Preview lateral
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(com.example.candyhouse.ui.theme.BackgroundCandy)
+    ) {
+        LazyColumn(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Recreación del contenido para el Preview
-            LazyColumn(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(listaPrueba) { item ->
-                    CartItemRow(item = item)
+            items(listaPrueba) { item ->
+                CartItemRow(item = item)
+            }
+
+            // Simulación del bloque del total y formas de pago para que lo veas estático
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "Total", fontSize = 22.sp, color = Color.Gray)
+                    Text(text = "$62.50", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = "Forma de pago", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+
+                // Botón de pago simulado
+                Spacer(modifier = Modifier.height(24.dp))
+                Button(
+                    onClick = { },
+                    modifier = Modifier.fillMaxWidth().height(54.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD600)),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text(text = "Pagar (2 productos)", color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
     }
-}
+}*/
