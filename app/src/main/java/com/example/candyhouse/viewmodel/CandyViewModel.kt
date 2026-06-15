@@ -7,11 +7,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.candyhouse.models.Product
 import com.example.candyhouse.services.CartRepository
+import com.example.candyhouse.services.RetrofitClient
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class CandyViewModel : ViewModel() {
+    // mandamos traer los datos del servidor de Node.js
+    init {
+        cargarDulcesDesdeServidor()
+    }
+
     var listaDesdeApi by mutableStateOf(emptyList<Product>())
+
+    //  Ideales para saber qué pasa con la API
+    var cargandoApi by mutableStateOf(false)
+    var errorApi by mutableStateOf<String?>(null)
 
     // Estados de búsqueda
     var textoBusqueda by mutableStateOf("")
@@ -27,6 +38,24 @@ class CandyViewModel : ViewModel() {
     var selectBajo by mutableStateOf(false)
 
     var proveedorSeleccionado by mutableStateOf("")
+
+    //  Consumir la API de Node.js en segundo plano
+    fun cargarDulcesDesdeServidor() {
+        viewModelScope.launch {
+            cargandoApi = true
+            errorApi = null
+            try {
+                // Hacemos la petición HTTP a través de Retrofit
+                val dulcesRemotos = RetrofitClient.apiService.getDulces()
+                listaDesdeApi = dulcesRemotos
+            } catch (e: Exception) {
+                errorApi = "No se pudo conectar con el servidor: ${e.localizedMessage}"
+                e.printStackTrace()
+            } finally {
+                cargandoApi = false
+            }
+        }
+    }
 
     val productosFiltrados: List<Product>
         get() {
@@ -81,7 +110,7 @@ class CandyViewModel : ViewModel() {
         buscando = false
     }
 
-    //Funcion exclusivamente para carrito de compras
+    // Funcion exclusivamente para carrito de compras
     val cartItem = CartRepository.cartItems.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

@@ -1,8 +1,5 @@
 package com.example.candyhouse.Screen
 
-import android.R.attr.contentDescription
-import android.R.attr.tint
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -50,25 +47,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.candyhouse.models.CartItem
-import com.example.candyhouse.services.CartRepository.cartItems
 import com.example.candyhouse.ui.theme.BackgroundCandy
 import com.example.candyhouse.viewmodel.CandyViewModel
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
 import java.util.Locale
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.candyhouse.components.CandyBottomBar
-import com.example.candyhouse.models.Product
-import com.example.candyhouse.ui.theme.CandyHouseTheme
-import models.HistorialViewModel
+import com.example.candyhouse.gestionarSalto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComprasScreen(
-    viewModel: CandyViewModel= viewModel()
+    viewModel: CandyViewModel = viewModel(),
+    navController: NavHostController,
+    rutaActual: String
 ){
   val cartItem by viewModel.cartItem.collectAsState()
     var selectedPaymentMethod by remember { mutableStateOf("Efectivo") }
@@ -90,8 +82,8 @@ fun ComprasScreen(
         //BOTONES DE ABAJO
         bottomBar = {
             CandyBottomBar(
-                pantallaActual = "compras",
-                onTabSelected = { pantalla ->
+                pantallaActual = "filtos",
+                onTabSelected = { destino -> gestionarSalto(navController, destino)
                 }
             )
         },

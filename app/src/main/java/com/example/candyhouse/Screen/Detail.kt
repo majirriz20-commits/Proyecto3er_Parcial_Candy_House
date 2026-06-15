@@ -30,6 +30,8 @@ import com.example.candyhouse.services.CartRepository
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
+
+
     producto: Product = Product(
         id = 1,
         nombre = "Gomitas de oso",

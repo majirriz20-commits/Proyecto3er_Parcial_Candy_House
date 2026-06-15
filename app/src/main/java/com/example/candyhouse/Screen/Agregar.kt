@@ -49,14 +49,17 @@ import androidx.compose.ui.window.Dialog
 import com.example.candyhouse.components.CandyBottomBar
 import com.example.candyhouse.viewmodel.CandyViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import java.util.Locale
+import androidx.navigation.NavHostController
+import com.example.candyhouse.gestionarSalto
 
 @SuppressLint("InvalidColorHexValue")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProducts(
     onClose: () -> Unit = {},
-    viewModel: CandyViewModel = viewModel()
+    viewModel: CandyViewModel = viewModel(),
+    navController: NavHostController,
+    rutaActual: String
 ){
     // Estados para cada campo de texto
     var titulo by remember { mutableStateOf("") }
@@ -74,7 +77,7 @@ fun AddProducts(
         bottomBar = {
             CandyBottomBar(
                 pantallaActual = "agregar",
-                onTabSelected = {}
+                onTabSelected = {destino -> gestionarSalto(navController, destino)}
             )
         },
         containerColor = Color.White
