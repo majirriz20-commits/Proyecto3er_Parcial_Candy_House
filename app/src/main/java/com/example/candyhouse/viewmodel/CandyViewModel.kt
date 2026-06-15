@@ -13,10 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CandyViewModel : ViewModel() {
-    // mandamos traer los datos del servidor de Node.js
-    init {
-        cargarDulcesDesdeServidor()
-    }
+
 
     var listaDesdeApi by mutableStateOf(emptyList<Product>())
 
@@ -116,4 +113,9 @@ class CandyViewModel : ViewModel() {
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
+
+    // mandamos traer los datos del servidor de Node.js
+    init {
+        cargarDulcesDesdeServidor()
+    }
 }

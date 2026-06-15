@@ -24,7 +24,8 @@ fun NavGraph(
         composable("inicio") {
             InicioScreen(
                 onIrAFiltros = { navController.navigate("filtros") },
-                viewModel = candyViewModel
+                viewModel = candyViewModel,
+                navController = navController
             )
         }
 
@@ -42,6 +43,19 @@ fun NavGraph(
         composable("detail") {
             DetailScreen(
                 onClose = { navController.popBackStack() }
+            )
+        }
+
+        composable("agregar") {
+            AddProducts(
+                navController = navController,
+                rutaActual = "agregar"
+            )
+        }
+        composable("notificaciones") {
+            NotificacionesScreen(
+                navController = navController,
+                rutaActual = "notificaciones"
             )
         }
     }

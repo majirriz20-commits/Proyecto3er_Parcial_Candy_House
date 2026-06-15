@@ -28,6 +28,9 @@ import com.example.candyhouse.components.CandyBottomBar
 import com.example.candyhouse.models.Product
 import com.example.candyhouse.services.RetrofitClient
 import com.example.candyhouse.viewmodel.CandyViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.candyhouse.gestionarSalto
 
 
 // 1. HEADER
@@ -201,11 +204,11 @@ fun CandyGridContent(
 }
 
 @Composable
-fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
+fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel, navController: NavHostController) {
 
     LaunchedEffect(Unit) {
         try {
-            val resultado = RetrofitClient.instance.getAllProducts()
+            val resultado = RetrofitClient.apiService.getDulces()
             viewModel.listaDesdeApi = resultado
         } catch (e: Exception) {
             e.printStackTrace()
@@ -223,11 +226,7 @@ fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel) {
             // 3. BARRA
             CandyBottomBar(
                 pantallaActual = "inicio",
-                onTabSelected = { pantalla ->
-                    if (pantalla == "carrito") {
-                        // TODO: Lógica de navegación
-                    }
-                }
+                onTabSelected = { destino -> gestionarSalto(navController, destino) }
             )
         }
     ) { innerPadding ->
@@ -264,6 +263,7 @@ fun InicioScreenPreview() {
     val viewModelFalso = CandyViewModel()
     InicioScreen(
         onIrAFiltros = {},
-        viewModel = viewModelFalso
+        viewModel = viewModelFalso,
+        navController = rememberNavController()
     )
 }

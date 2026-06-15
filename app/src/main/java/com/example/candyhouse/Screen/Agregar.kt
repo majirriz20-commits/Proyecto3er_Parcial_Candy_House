@@ -50,6 +50,7 @@ import com.example.candyhouse.components.CandyBottomBar
 import com.example.candyhouse.viewmodel.CandyViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.candyhouse.gestionarSalto
 
 @SuppressLint("InvalidColorHexValue")
@@ -283,5 +284,8 @@ fun CandyInputField(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AddProductPreview() {
-    AddProducts()
+    AddProducts(
+        navController = rememberNavController(),
+        rutaActual = "agregar"
+    )
 }
