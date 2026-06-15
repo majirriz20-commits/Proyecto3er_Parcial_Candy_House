@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.candyhouse.Screen.ComprasScreen
 
 // IMPORTS DE TU VIEWMODEL Y PANTALLAS
 import com.example.candyhouse.viewmodel.CandyViewModel
@@ -46,14 +47,25 @@ fun NavGraph(
             )
         }
 
+        composable("compras") {
+            ComprasScreen(
+                viewModel = candyViewModel,
+                navController = navController,
+                rutaActual = "compras"
+            )
+        }
+
         composable("agregar") {
             AddProducts(
+                viewModel = candyViewModel,
                 navController = navController,
                 rutaActual = "agregar"
             )
         }
+
         composable("notificaciones") {
             NotificacionesScreen(
+                viewModel = candyViewModel,
                 navController = navController,
                 rutaActual = "notificaciones"
             )
