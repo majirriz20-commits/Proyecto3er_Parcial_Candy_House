@@ -32,8 +32,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.candyhouse.gestionarSalto
 
-
-// 1. HEADER
 @Composable
 fun CandyTopBar(onMenuClick: () -> Unit, viewModel: CandyViewModel) {
     Column(
@@ -120,12 +118,10 @@ fun CandyTopBar(onMenuClick: () -> Unit, viewModel: CandyViewModel) {
     }
 }
 
-
-// 2. TARJETAS INDIVIDUAL
-
 @Composable
-fun DulceCard(producto: Product) {
+fun DulceCard(producto: Product, onClick: () -> Unit = {}) {
     Card(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
@@ -142,30 +138,24 @@ fun DulceCard(producto: Product) {
                     .background(Color.White, shape = RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Fit
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = producto.nombre,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color.Black
             )
-
             Text(
                 text = "$${String.format("%.2f", producto.precio)}",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
-
             Spacer(modifier = Modifier.height(6.dp))
-
             val (colorIndicador, textoEstado) = if (producto.estado == "Optimo") {
                 Color(0xFF00E5FF) to "Optimo"
             } else {
                 Color(0xFFFFD600) to "Bajo"
             }
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
@@ -173,11 +163,7 @@ fun DulceCard(producto: Product) {
                         .background(colorIndicador, shape = CircleShape)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = textoEstado,
-                    fontSize = 12.sp,
-                    color = colorIndicador
-                )
+                Text(text = textoEstado, fontSize = 12.sp, color = colorIndicador)
             }
         }
     }
@@ -186,7 +172,8 @@ fun DulceCard(producto: Product) {
 @Composable
 fun CandyGridContent(
     productos: List<Product>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onProductoClick: (Product) -> Unit = {}
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -196,9 +183,10 @@ fun CandyGridContent(
         modifier = modifier.background(Color.White)
     ) {
         items(productos) { dulce ->
-
-            // 2. TARJETAS
-            DulceCard(producto = dulce)
+            DulceCard(
+                producto = dulce,
+                onClick = { onProductoClick(dulce) }
+            )
         }
     }
 }
@@ -217,13 +205,9 @@ fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel, navControl
 
     Scaffold(
         topBar = {
-
-            // 1. HEADER
             CandyTopBar(onMenuClick = onIrAFiltros, viewModel = viewModel)
         },
         bottomBar = {
-
-            // 3. BARRA
             CandyBottomBar(
                 pantallaActual = "inicio",
                 onTabSelected = { destino -> gestionarSalto(navController, destino) }
@@ -250,7 +234,8 @@ fun InicioScreen(onIrAFiltros: () -> Unit, viewModel: CandyViewModel, navControl
         } else {
             CandyGridContent(
                 productos = viewModel.productosFiltradosBusqueda,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                onProductoClick = { producto -> navController.navigate("detail/${producto.id}") }
             )
         }
     }
