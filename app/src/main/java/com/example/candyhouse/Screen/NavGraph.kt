@@ -41,10 +41,15 @@ fun NavGraph(
             HistorialScreen()
         }
 
-        composable("detail") {
-            DetailScreen(
-                onClose = { navController.popBackStack() }
-            )
+        composable("detail/{productoId}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("productoId")?.toIntOrNull() ?: 1
+            val producto = candyViewModel.listaDesdeApi.find { it.id == id }
+            if (producto != null) {
+                DetailScreen(
+                    producto = producto,
+                    onClose = { navController.popBackStack() }
+                )
+            }
         }
 
         composable("compras") {
