@@ -1,5 +1,7 @@
 package com.example.candyhouse.Screen
 
+import coil3.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -68,6 +70,13 @@ fun DetailScreen(
                     modifier = Modifier.size(20.dp)
                 )
             }
+            AsyncImage(
+                model = producto.imageUrl ?: "",
+                contentDescription = producto.nombre ?: "",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
+
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
