@@ -1,37 +1,31 @@
 package com.example.candyhouse.Screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.foundation.border
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.candyhouse.R
 import com.example.candyhouse.models.Product
 import com.example.candyhouse.services.CartRepository
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-
-
     producto: Product = Product(
         id = 1,
         nombre = "Gomitas de oso",
@@ -53,15 +47,12 @@ fun DetailScreen(
             .background(Color.White)
             .verticalScroll(rememberScrollState())
     ) {
-
-        // imagn con el boton cerar
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(260.dp)
                 .background(Color(0xFFE0E0E0))
         ) {
-            // Botón X
             IconButton(
                 onClick = onClose,
                 modifier = Modifier
@@ -77,8 +68,6 @@ fun DetailScreen(
                     modifier = Modifier.size(20.dp)
                 )
             }
-
-            //puntitos
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -89,94 +78,69 @@ fun DetailScreen(
                 Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(Color.DarkGray))
             }
         }
-        //nombre y codig
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = producto.nombre,
+                    text = producto.nombre ?: "",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
-                Text(
-                    text = "ID: ${producto.id}",
-                    fontSize = 13.sp,
-                    color = Color.Gray
-                )
+                Text(text = "ID: ${producto.id}", fontSize = 13.sp, color = Color.Gray)
             }
-            // Botón editar
             IconButton(onClick = { }) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Editar",
-                    tint = Color(0xFFFF3B7B),
-                    modifier = Modifier.size(24.dp)
-                )
+                Icon(imageVector = Icons.Default.Edit, contentDescription = "Editar", tint = Color(0xFFFF3B7B), modifier = Modifier.size(24.dp))
             }
-            // Botón eliminar
             IconButton(onClick = { }) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Eliminar",
-                    tint = Color(0xFFFFC107),
-                    modifier = Modifier.size(24.dp)
-                )
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Eliminar", tint = Color(0xFFFFC107), modifier = Modifier.size(24.dp))
             }
         }
 
-        //emojis info
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             InfoChip(emoji = "🏷️", label = "Precio", value = "$${producto.precio}", chipColor = Color(0xFF29B6F6))
-            InfoChip(emoji = "📦", label = "Existencia", value = producto.existencia, chipColor = Color(0xFF66BB6A))
-            InfoChip(emoji = "📍", label = "Pasillo",    value = producto.pasillo,    chipColor = Color(0xFFFF9800))
+            InfoChip(emoji = "📦", label = "Existencia", value = producto.existencia ?: "", chipColor = Color(0xFF66BB6A))
+            InfoChip(emoji = "📍", label = "Pasillo", value = producto.pasillo ?: "", chipColor = Color(0xFFFF9800))
         }
 
         Spacer(modifier = Modifier.height(20.dp))
         HorizontalDivider(color = Color(0xFFEEEEEE))
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Proveedor
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Text("Proveedor", fontSize = 13.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(2.dp))
-            Text(producto.proveedor, fontSize = 14.sp, color = Color.DarkGray)
+            Text(producto.proveedor ?: "", fontSize = 14.sp, color = Color.DarkGray)
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Categoría
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Text("Categoría", fontSize = 13.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(2.dp))
-            Text(producto.categoria, fontSize = 14.sp, color = Color.DarkGray)
+            Text(producto.categoria ?: "Sin categoría", fontSize = 14.sp, color = Color.DarkGray)
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Fecha de caducidad
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Text("Fecha de caducidad", fontSize = 13.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(2.dp))
-            Text(producto.fechaCaducidad, fontSize = 14.sp, color = Color.DarkGray)
+            Text(producto.fechaCaducidad ?: "", fontSize = 14.sp, color = Color.DarkGray)
         }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         var cantidad by remember { mutableStateOf(1) }
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -187,24 +151,18 @@ fun DetailScreen(
             ) {
                 IconButton(
                     onClick = { if (cantidad > 1) cantidad-- },
-                    modifier = Modifier
-                        .size(32.dp)
-                        .border(1.5.dp, Color(0xFFFF3B7B), CircleShape)
+                    modifier = Modifier.size(32.dp).border(1.5.dp, Color(0xFFFF3B7B), CircleShape)
                 ) {
                     Text("−", fontSize = 18.sp, color = Color(0xFFFF3B7B), fontWeight = FontWeight.Bold)
                 }
                 Box(
-                    modifier = Modifier
-                        .border(1.dp, Color.LightGray, RoundedCornerShape(4.dp))
-                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                    modifier = Modifier.border(1.dp, Color.LightGray, RoundedCornerShape(4.dp)).padding(horizontal = 16.dp, vertical = 4.dp)
                 ) {
                     Text(text = cantidad.toString(), fontSize = 14.sp)
                 }
                 IconButton(
                     onClick = { cantidad++ },
-                    modifier = Modifier
-                        .size(32.dp)
-                        .border(1.5.dp, Color(0xFFFF3B7B), CircleShape)
+                    modifier = Modifier.size(32.dp).border(1.5.dp, Color(0xFFFF3B7B), CircleShape)
                 ) {
                     Text("+", fontSize = 18.sp, color = Color(0xFFFF3B7B), fontWeight = FontWeight.Bold)
                 }
@@ -214,18 +172,11 @@ fun DetailScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Button(
-                onClick = {
-                    CartRepository.addProductCart(
-                        product = producto,
-                        cantidad = cantidad.toDouble()
-                    )
-                },
+                onClick = { CartRepository.addProductCart(product = producto, cantidad = cantidad.toDouble()) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107)),
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier.weight(1f).height(48.dp)
@@ -245,6 +196,7 @@ fun DetailScreen(
         Spacer(modifier = Modifier.height(80.dp))
     }
 }
+
 @Composable
 fun InfoChip(emoji: String, label: String, value: String, chipColor: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -259,14 +211,12 @@ fun InfoChip(emoji: String, label: String, value: String, chipColor: Color) {
         }
         Spacer(modifier = Modifier.height(4.dp))
         Text(label, fontSize = 10.sp, color = Color.Gray)
-        Text(value,  fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+        Text(value, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
     }
 }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DetailScreenPreview() {
-        DetailScreen()
-    }
-
-
+@Preview(showBackground = true)
+@Composable
+fun DetailScreenPreview() {
+    DetailScreen()
+}
