@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.candyhouse.components.CandyBottomBar
+// IMPORTAMOS EL VIEWMODEL DESDE SU NUEVA RUTA
 import com.example.candyhouse.viewmodel.CandyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,28 +69,28 @@ fun FiltrosScreen(
                             checked = viewModel.selectGomitas,
                             onCheckedChange = { viewModel.selectGomitas = it }
                         )
-                        Text("Gomitas", color = Color.Black)
+                        Text("Gomitas", color = Color.White)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = viewModel.selectChocolates,
                             onCheckedChange = { viewModel.selectChocolates = it }
                         )
-                        Text("Chocolates", color = Color.Black)
+                        Text("Chocolates", color = Color.White)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = viewModel.selectBebidas,
                             onCheckedChange = { viewModel.selectBebidas = it }
                         )
-                        Text("Bebidas", color = Color.Black)
+                        Text("Bebidas", color = Color.White)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = viewModel.selectImportados,
                             onCheckedChange = { viewModel.selectImportados = it }
                         )
-                        Text("Importados", color = Color.Black)
+                        Text("Importados", color = Color.White)
                     }
                 }
             }
@@ -100,7 +101,7 @@ fun FiltrosScreen(
                     Text(
                         text = "Rangos: \$${viewModel.rangoPrecio.start.toInt()} - \$${viewModel.rangoPrecio.endInclusive.toInt()}",
                         fontSize = 14.sp,
-                        color = Color.DarkGray,
+                        color = Color.White,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
@@ -126,14 +127,14 @@ fun FiltrosScreen(
                             checked = viewModel.selectOptimo,
                             onCheckedChange = { viewModel.selectOptimo = it }
                         )
-                        Text("Óptimo", color = Color.Black)
+                        Text("Óptimo", color = Color.White)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = viewModel.selectBajo,
                             onCheckedChange = { viewModel.selectBajo = it }
                         )
-                        Text("Bajo", color = Color.Black)
+                        Text("Bajo", color = Color.White)
                     }
                 }
             }
@@ -163,7 +164,7 @@ fun FiltrosScreen(
                                     viewModel.proveedorSeleccionado = if (isChecked) pro else ""
                                 }
                             )
-                            Text(text = pro, color = Color.Black, fontSize = 14.sp)
+                            Text(text = pro, color = Color.White, fontSize = 14.sp)
                         }
                     }
                 }
@@ -180,7 +181,7 @@ fun FiltrosScreen(
                 OutlinedButton(
                     onClick = { viewModel.limpiarFiltros() },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Gray),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
                     border = BorderStroke(1.dp, Color.LightGray),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -222,13 +223,13 @@ fun FiltroDesplegable(
                 text = titulo,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.Black
+                color = Color.White
             )
 
             Icon(
                 imageVector = if (estaExpandido) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                 contentDescription = if (estaExpandido) "Colapsar" else "Expandir",
-                tint = Color.DarkGray
+                tint = Color.White
             )
         }
 

@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.candyhouse.Screen.ComprasScreen
 
 // IMPORTS DE TU VIEWMODEL Y PANTALLAS
 import com.example.candyhouse.viewmodel.CandyViewModel
@@ -37,23 +38,38 @@ fun NavGraph(
         }
 
         composable("historial") {
-            HistorialScreen()
+            HistorialScreen(navController = navController)
+        }
+        composable("detail/{productoId}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("productoId")?.toIntOrNull() ?: 1
+            val producto = candyViewModel.listaDesdeApi.find { it.id == id }
+            if (producto != null) {
+                DetailScreen(
+                    producto = producto,
+                    onClose = { navController.popBackStack() }
+                )
+            }
         }
 
-        composable("detail") {
-            DetailScreen(
-                onClose = { navController.popBackStack() }
+        composable("compras") {
+            ComprasScreen(
+                viewModel = candyViewModel,
+                navController = navController,
+                rutaActual = "compras"
             )
         }
 
         composable("agregar") {
             AddProducts(
+                viewModel = candyViewModel,
                 navController = navController,
                 rutaActual = "agregar"
             )
         }
+
         composable("notificaciones") {
             NotificacionesScreen(
+                viewModel = candyViewModel,
                 navController = navController,
                 rutaActual = "notificaciones"
             )
