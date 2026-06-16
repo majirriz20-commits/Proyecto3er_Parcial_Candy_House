@@ -3,6 +3,7 @@ package com.example.candyhouse.Screen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -97,53 +98,27 @@ fun AddProducts(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(220.dp)
-                        .background(Color(0xFFE0E0E0)),
+                        .background(Color(0xFFE0E0E0))
+                        .clickable {
+                            imageUrlTemp = imageUrl
+                            showImageDialog = true
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     if (imageUrl.isNotEmpty()) {
-                        // Mostrar imagen cargada
                         AsyncImage(
                             model = imageUrl,
                             contentDescription = "Imagen del producto",
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Fit
                         )
-                        // Botón X para eliminar imagen
-                        IconButton(
-                            onClick = { imageUrl = "" },
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(8.dp)
-                                .size(32.dp)
-                                .background(Color.White.copy(alpha = 0.8f), CircleShape)
-                        ) {
-                            Icon(Icons.Default.Close, contentDescription = "Eliminar imagen", tint = Color.DarkGray, modifier = Modifier.size(18.dp))
-                        }
                     } else {
-                        // Mostrar botón para agregar imagen
-                        IconButton(
-                            onClick = onClose,
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(16.dp)
-                                .size(32.dp)
-                                .background(Color.White.copy(alpha = 0.5f), CircleShape)
-                        ) {
-                            Icon(Icons.Default.Close, contentDescription = "Cerrar", tint = Color.DarkGray)
-                        }
-
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(Color.Transparent)
-                                .padding(16.dp)
-                        ) {
-                            IconButton(
-                                onClick = { showImageDialog = true },
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Box(
                                 modifier = Modifier
                                     .size(80.dp)
-                                    .border(2.dp, Color.White, CircleShape)
+                                    .border(2.dp, Color.White, CircleShape),
+                                contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
@@ -155,7 +130,22 @@ fun AddProducts(
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(text = "Agregar Imagen", color = Color.White, fontSize = 14.sp)
                         }
+                    }
 
+                    // Botón cerrar SIEMPRE en esquina superior izquierda
+                    IconButton(
+                        onClick = onClose,
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(8.dp)
+                            .size(32.dp)
+                            .background(Color.White.copy(alpha = 0.7f), CircleShape)
+                    ) {
+                        Icon(Icons.Default.Close, contentDescription = "Cerrar", tint = Color.DarkGray, modifier = Modifier.size(18.dp))
+                    }
+
+                    // Puntos solo cuando no hay imagen
+                    if (imageUrl.isEmpty()) {
                         Row(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
@@ -202,57 +192,63 @@ fun AddProducts(
                 }
             }
 
-            // DIALOG PARA PEDIR URL DE IMAGEN
+            // DIALOG PARA URL DE IMAGEN
             if (showImageDialog) {
                 Dialog(onDismissRequest = { showImageDialog = false }) {
-                    Box(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(24.dp))
                             .background(Color.White)
                             .padding(24.dp)
                     ) {
-                        Column {
-                            Text("URL de la imagen", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                            Spacer(modifier = Modifier.height(12.dp))
-                            OutlinedTextField(
-                                value = imageUrlTemp,
-                                onValueChange = { imageUrlTemp = it },
-                                placeholder = { Text("https://...", color = Color.LightGray) },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(8.dp),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    focusedBorderColor = Color(0xFFFF4081),
-                                    unfocusedBorderColor = Color.LightGray
-                                )
+                        Text(
+                            if (imageUrl.isEmpty()) "Agregar imagen" else "Editar imagen",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        OutlinedTextField(
+                            value = imageUrlTemp,
+                            onValueChange = { imageUrlTemp = it },
+                            placeholder = { Text("https://...", color = Color.LightGray) },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp),
+                            maxLines = 3,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFFFF4081),
+                                unfocusedBorderColor = Color.LightGray
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    imageUrlTemp = ""
+                                    showImageDialog = false
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(8.dp)
                             ) {
-                                Button(
-                                    onClick = {
-                                        imageUrlTemp = ""
-                                        showImageDialog = false
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
-                                    modifier = Modifier.weight(1f),
-                                    shape = RoundedCornerShape(8.dp)
-                                ) {
-                                    Text("Cancelar", color = Color.Black)
-                                }
-                                Button(
-                                    onClick = {
-                                        imageUrl = imageUrlTemp
-                                        showImageDialog = false
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
-                                    modifier = Modifier.weight(1f),
-                                    shape = RoundedCornerShape(8.dp)
-                                ) {
-                                    Text("Agregar", color = Color.White)
-                                }
+                                Text("Cancelar", color = Color.Black)
+                            }
+                            Button(
+                                onClick = {
+                                    imageUrl = imageUrlTemp
+                                    showImageDialog = false
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text(
+                                    if (imageUrl.isEmpty()) "Agregar" else "Editar",
+                                    color = Color.White
+                                )
                             }
                         }
                     }
