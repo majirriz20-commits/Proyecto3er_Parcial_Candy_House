@@ -40,12 +40,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import coil3.compose.AsyncImage
 import com.example.candyhouse.components.CandyBottomBar
 import com.example.candyhouse.viewmodel.CandyViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -62,7 +64,6 @@ fun AddProducts(
     navController: NavHostController,
     rutaActual: String
 ){
-    // Estados para cada campo de texto
     var titulo by remember { mutableStateOf("") }
     var precio by remember { mutableStateOf("") }
     var existencia by remember { mutableStateOf("") }
@@ -70,28 +71,28 @@ fun AddProducts(
     var proveedor by remember { mutableStateOf("") }
     var categoria by remember { mutableStateOf("") }
     var fechaCaducidad by remember { mutableStateOf("") }
-
-    // Anuncio de Guardado con éxito
+    var imageUrl by remember { mutableStateOf("") }
     var showSuccessDialog by remember { mutableStateOf(false) }
+    var showImageDialog by remember { mutableStateOf(false) }
+    var imageUrlTemp by remember { mutableStateOf("") }
 
     Scaffold(
         bottomBar = {
             CandyBottomBar(
                 pantallaActual = "agregar",
-                onTabSelected = {destino -> gestionarSalto(navController, destino)}
+                onTabSelected = { destino -> gestionarSalto(navController, destino) }
             )
         },
         containerColor = Color.White
     ) { innerPadding ->
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
             ) {
+                // CAJA DE IMAGEN
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -99,79 +100,89 @@ fun AddProducts(
                         .background(Color(0xFFE0E0E0)),
                     contentAlignment = Alignment.Center
                 ) {
-                    IconButton(
-                        onClick = onClose,
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(16.dp)
-                            .size(32.dp)
-                            .background(Color.White.copy(alpha = 0.5f), CircleShape)
-                    ) {
-                        Icon(Icons.Default.Close, contentDescription = "Cerrar", tint = Color.DarkGray)
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .border(2.dp, Color.White, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ){
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(40.dp)
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Agregar Imagen",
-                            color = Color.White,
-                            fontSize = 14.sp
+                    if (imageUrl.isNotEmpty()) {
+                        // Mostrar imagen cargada
+                        AsyncImage(
+                            model = imageUrl,
+                            contentDescription = "Imagen del producto",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Fit
                         )
-                    }
+                        // Botón X para eliminar imagen
+                        IconButton(
+                            onClick = { imageUrl = "" },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(8.dp)
+                                .size(32.dp)
+                                .background(Color.White.copy(alpha = 0.8f), CircleShape)
+                        ) {
+                            Icon(Icons.Default.Close, contentDescription = "Eliminar imagen", tint = Color.DarkGray, modifier = Modifier.size(18.dp))
+                        }
+                    } else {
+                        // Mostrar botón para agregar imagen
+                        IconButton(
+                            onClick = onClose,
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .padding(16.dp)
+                                .size(32.dp)
+                                .background(Color.White.copy(alpha = 0.5f), CircleShape)
+                        ) {
+                            Icon(Icons.Default.Close, contentDescription = "Cerrar", tint = Color.DarkGray)
+                        }
 
-                    // Puntos indicadores
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(Color.White))
-                        Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(Color.Gray))
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(Color.Transparent)
+                                .padding(16.dp)
+                        ) {
+                            IconButton(
+                                onClick = { showImageDialog = true },
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .border(2.dp, Color.White, CircleShape)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(text = "Agregar Imagen", color = Color.White, fontSize = 14.sp)
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(Color.White))
+                            Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(Color.Gray))
+                        }
                     }
                 }
 
-                // FORMULARIO DE DATOS
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp)
                 ) {
-                    Text(
-                        text = "Título",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = "01545789",
-                        fontSize = 13.sp,
-                        color = Color.Gray
-                    )
-
+                    Text(text = "Nuevo Producto", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    CandyInputField(label = "Título", icon = "🍬", value = titulo, onValueChange = { titulo = it }, placeholder = "Nombre del producto", iconColor = Color(0xFFFF4081))
                     CandyInputField(label = "Precio", icon = "🏷️", value = precio, onValueChange = { precio = it }, placeholder = "$ 0.00", iconColor = Color(0xFF0095FF))
                     CandyInputField(label = "Existencia", icon = "📦", value = existencia, onValueChange = { existencia = it }, placeholder = "Stock", iconColor = Color(0xFFFFD600))
                     CandyInputField(label = "Pasillo", icon = "📍", value = pasillo, onValueChange = { pasillo = it }, placeholder = "Número", iconColor = Color(0xFFFF4081))
-                    CandyInputField(label = "Proveedor", icon = "👤", value = proveedor, onValueChange = { proveedor = it }, placeholder = "Nombre", iconColor = Color(0xFF0095FF)) // Corregido el cero extra
+                    CandyInputField(label = "Proveedor", icon = "👤", value = proveedor, onValueChange = { proveedor = it }, placeholder = "Nombre", iconColor = Color(0xFF0095FF))
                     CandyInputField(label = "Categoría", icon = "🗂️", value = categoria, onValueChange = { categoria = it }, placeholder = "Nombre", iconColor = Color(0xFFFFD600))
-                    CandyInputField(label = "Fecha de caducidad", icon = "📅", value = fechaCaducidad, onValueChange = { fechaCaducidad = it }, placeholder = "Fecha", iconColor = Color(0xFFFF4081))
+                    CandyInputField(label = "Fecha de caducidad", icon = "📅", value = fechaCaducidad, onValueChange = { fechaCaducidad = it }, placeholder = "MM/AAAA", iconColor = Color(0xFFFF4081))
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -191,8 +202,65 @@ fun AddProducts(
                 }
             }
 
-            //Alerta de exito
-            if (showSuccessDialog){
+            // DIALOG PARA PEDIR URL DE IMAGEN
+            if (showImageDialog) {
+                Dialog(onDismissRequest = { showImageDialog = false }) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(24.dp))
+                            .background(Color.White)
+                            .padding(24.dp)
+                    ) {
+                        Column {
+                            Text("URL de la imagen", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(12.dp))
+                            OutlinedTextField(
+                                value = imageUrlTemp,
+                                onValueChange = { imageUrlTemp = it },
+                                placeholder = { Text("https://...", color = Color.LightGray) },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(8.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color(0xFFFF4081),
+                                    unfocusedBorderColor = Color.LightGray
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Button(
+                                    onClick = {
+                                        imageUrlTemp = ""
+                                        showImageDialog = false
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Text("Cancelar", color = Color.Black)
+                                }
+                                Button(
+                                    onClick = {
+                                        imageUrl = imageUrlTemp
+                                        showImageDialog = false
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF4081)),
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Text("Agregar", color = Color.White)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // DIALOG DE ÉXITO
+            if (showSuccessDialog) {
                 Dialog(onDismissRequest = { showSuccessDialog = false }) {
                     Box(
                         modifier = Modifier
@@ -201,37 +269,21 @@ fun AddProducts(
                             .background(Color.White)
                             .padding(20.dp),
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "Guardado",
-                                fontSize = 32.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            )
+                            Text(text = "Guardado", fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                             Spacer(modifier = Modifier.height(20.dp))
-
                             Box(
                                 modifier = Modifier
                                     .size(80.dp)
                                     .clip(CircleShape)
                                     .background(Color(0xFF66BB6A)),
                                 contentAlignment = Alignment.Center
-                            ){
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(50.dp)
-                                )
+                            ) {
+                                Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(50.dp))
                             }
                             Spacer(modifier = Modifier.height(20.dp))
-                            Text(
-                                text = "¡Ha sido guardado con éxito!",
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Center,
-                                color = Color.DarkGray
-                            )
+                            Text(text = "¡Ha sido guardado con éxito!", fontSize = 16.sp, textAlign = TextAlign.Center, color = Color.DarkGray)
                         }
                     }
                 }
