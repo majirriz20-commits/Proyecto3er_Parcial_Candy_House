@@ -51,7 +51,7 @@ fun NotificacionesScreen(
 
     val bajoStock     = productos.filter { it.estado == "Bajo" }
     val proximoVencer = productos.filter {
-        val anio = it.fechaCaducidad.substringAfter("/").trim().toIntOrNull() ?: 9999
+        val anio = it.fechaCaducidad?.substringAfter("/")?.trim()?.toIntOrNull() ?: 9999
         anio <= 2027
     }
 
