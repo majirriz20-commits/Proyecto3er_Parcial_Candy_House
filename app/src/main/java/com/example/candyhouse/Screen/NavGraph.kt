@@ -37,7 +37,7 @@ fun NavGraph(
         }
 
         composable("historial") {
-            HistorialScreen()
+            HistorialScreen(navController = navController)
         }
 
         composable("detail") {
