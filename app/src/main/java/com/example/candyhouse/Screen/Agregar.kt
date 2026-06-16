@@ -1,7 +1,6 @@
 package com.example.candyhouse.Screen
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,20 +25,17 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,10 +55,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.candyhouse.gestionarSalto
-import com.example.candyhouse.services.DulceRequest
-import com.example.candyhouse.services.RetrofitClient
-import kotlinx.coroutines.launch
-
 
 @SuppressLint("InvalidColorHexValue")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,10 +76,6 @@ fun AddProducts(
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showImageDialog by remember { mutableStateOf(false) }
     var imageUrlTemp by remember { mutableStateOf("") }
-    var guardando by remember { mutableStateOf(false) }
-    var errorGuardado by remember { mutableStateOf<String?>(null) }
-
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         bottomBar = {
@@ -183,77 +171,21 @@ fun AddProducts(
                     CandyInputField(label = "Existencia", icon = "📦", value = existencia, onValueChange = { existencia = it }, placeholder = "Stock", iconColor = Color(0xFFFFD600))
                     CandyInputField(label = "Pasillo", icon = "📍", value = pasillo, onValueChange = { pasillo = it }, placeholder = "Número", iconColor = Color(0xFFFF4081))
                     CandyInputField(label = "Proveedor", icon = "👤", value = proveedor, onValueChange = { proveedor = it }, placeholder = "Nombre", iconColor = Color(0xFF0095FF))
-
-                    CategoriaSelector(categoriaSeleccionada = categoria, onSeleccionar = { categoria = it })
-
+                    CandyInputField(label = "Categoría", icon = "🗂️", value = categoria, onValueChange = { categoria = it }, placeholder = "Nombre", iconColor = Color(0xFFFFD600))
                     CandyInputField(label = "Fecha de caducidad", icon = "📅", value = fechaCaducidad, onValueChange = { fechaCaducidad = it }, placeholder = "MM/AAAA", iconColor = Color(0xFFFF4081))
-
-                    errorGuardado?.let {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(it, color = Color(0xFFE53935), fontSize = 13.sp)
-                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
-                        onClick = {
-                            val precioDouble = precio.toDoubleOrNull()
-                            if (titulo.isBlank() || precioDouble == null) {
-                                errorGuardado = "Completa al menos el título y un precio válido"
-                                return@Button
-                            }
-
-                            scope.launch {
-                                guardando = true
-                                errorGuardado = null
-                                try {
-                                    val existenciaNum = existencia.filter { it.isDigit() }.toIntOrNull() ?: 0
-                                    val existenciaFormateada =
-                                        if (existencia.isNotBlank() && existencia.all { it.isDigit() }) "$existencia pz"
-                                        else existencia
-                                    val estadoCalculado = if (existenciaNum <= 50) "Bajo" else "Optimo"
-
-                                    RetrofitClient.apiService.crearDulce(
-                                        DulceRequest(
-                                            nombre = titulo,
-                                            precio = precioDouble,
-                                            estado = estadoCalculado,
-                                            imageUrl = imageUrl.ifBlank { null },
-                                            proveedor = proveedor.ifBlank { null },
-                                            existencia = existenciaFormateada.ifBlank { null },
-                                            pasillo = pasillo.ifBlank { null },
-                                            fechaCaducidad = fechaCaducidad.ifBlank { null },
-                                            categoria = categoria.ifBlank { null }
-                                        )
-                                    )
-
-                                    // Refresca la lista de Inicio con el nuevo producto
-                                    viewModel.cargarDulcesDesdeServidor()
-                                    showSuccessDialog = true
-
-                                    // Limpiar formulario
-                                    titulo = ""; precio = ""; existencia = ""; pasillo = ""
-                                    proveedor = ""; categoria = ""; fechaCaducidad = ""; imageUrl = ""
-                                } catch (e: Exception) {
-                                    errorGuardado = "No se pudo guardar el producto: ${e.localizedMessage}"
-                                } finally {
-                                    guardando = false
-                                }
-                            }
-                        },
-                        enabled = !guardando,
+                        onClick = { showSuccessDialog = true },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD600)),
                         modifier = Modifier
                             .align(Alignment.End)
-                            .width(140.dp)
+                            .width(120.dp)
                             .height(45.dp),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        if (guardando) {
-                            CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.Black, strokeWidth = 2.dp)
-                        } else {
-                            Text("Guardar", color = Color.Black, fontWeight = FontWeight.Bold)
-                        }
+                        Text("Guardar", color = Color.Black, fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -350,33 +282,6 @@ fun AddProducts(
                             Text(text = "¡Ha sido guardado con éxito!", fontSize = 16.sp, textAlign = TextAlign.Center, color = Color.DarkGray)
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun CategoriaSelector(categoriaSeleccionada: String, onSeleccionar: (String) -> Unit) {
-    val opciones = listOf("Gomitas", "Chocolates", "Bebidas", "Importados")
-    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
-        Text("Categoría", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-        Spacer(modifier = Modifier.height(6.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            opciones.forEach { opcion ->
-                val seleccionada = categoriaSeleccionada == opcion
-                Surface(
-                    onClick = { onSeleccionar(opcion) },
-                    shape = RoundedCornerShape(20.dp),
-                    color = if (seleccionada) Color(0xFFFF4081) else Color(0xFFF9F9F9),
-                    border = BorderStroke(1.dp, if (seleccionada) Color(0xFFFF4081) else Color.LightGray)
-                ) {
-                    Text(
-                        opcion,
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                        color = if (seleccionada) Color.White else Color.Black,
-                        fontSize = 13.sp
-                    )
                 }
             }
         }
