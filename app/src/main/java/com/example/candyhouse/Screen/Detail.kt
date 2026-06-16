@@ -10,15 +10,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Inventory
+import androidx.compose.material.icons.filled.LocalOffer
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -114,9 +120,9 @@ fun DetailScreen(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            InfoChip(emoji = "🏷️", label = "Precio", value = "$${producto.precio}", chipColor = Color(0xFF29B6F6))
-            InfoChip(emoji = "📦", label = "Existencia", value = producto.existencia ?: "", chipColor = Color(0xFF66BB6A))
-            InfoChip(emoji = "📍", label = "Pasillo", value = producto.pasillo ?: "", chipColor = Color(0xFFFF9800))
+            InfoChip(label = "Precio",     value = "$${producto.precio}", chipColor = Color(0xFF29B6F6), icon = Icons.Default.LocalOffer)
+            InfoChip(label = "Existencia", value = producto.existencia ?: "", chipColor = Color(0xFF66BB6A), icon = Icons.Default.Inventory)
+            InfoChip(label = "Pasillo",    value = producto.pasillo ?: "", chipColor = Color(0xFFFF9800), icon = Icons.Default.LocationOn)
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -190,7 +196,9 @@ fun DetailScreen(
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier.weight(1f).height(48.dp)
             ) {
-                Text("🛒  Venta", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Venta", tint = Color.White, modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("Venta", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
             }
             Button(
                 onClick = { },
@@ -198,7 +206,9 @@ fun DetailScreen(
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier.weight(1f).height(48.dp)
             ) {
-                Text("⊕  Pedir", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Icon(imageVector = Icons.Default.AddCircle, contentDescription = "Pedir", tint = Color.White, modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("Pedir", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
             }
         }
 
@@ -207,7 +217,7 @@ fun DetailScreen(
 }
 
 @Composable
-fun InfoChip(emoji: String, label: String, value: String, chipColor: Color) {
+fun InfoChip(label: String, value: String, chipColor: Color, icon: ImageVector) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
@@ -216,7 +226,7 @@ fun InfoChip(emoji: String, label: String, value: String, chipColor: Color) {
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(emoji, fontSize = 20.sp)
+            Icon(imageVector = icon, contentDescription = label, tint = chipColor, modifier = Modifier.size(20.dp))
         }
         Spacer(modifier = Modifier.height(4.dp))
         Text(label, fontSize = 10.sp, color = Color.Gray)
