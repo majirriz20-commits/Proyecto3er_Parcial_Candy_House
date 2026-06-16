@@ -69,28 +69,28 @@ fun FiltrosScreen(
                             checked = viewModel.selectGomitas,
                             onCheckedChange = { viewModel.selectGomitas = it }
                         )
-                        Text("Gomitas", color = Color.White)
+                        Text("Gomitas", color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = viewModel.selectChocolates,
                             onCheckedChange = { viewModel.selectChocolates = it }
                         )
-                        Text("Chocolates", color = Color.White)
+                        Text("Chocolates", color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = viewModel.selectBebidas,
                             onCheckedChange = { viewModel.selectBebidas = it }
                         )
-                        Text("Bebidas", color = Color.White)
+                        Text("Bebidas", color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = viewModel.selectImportados,
                             onCheckedChange = { viewModel.selectImportados = it }
                         )
-                        Text("Importados", color = Color.White)
+                        Text("Importados", color = Color.Black)
                     }
                 }
             }
@@ -101,7 +101,7 @@ fun FiltrosScreen(
                     Text(
                         text = "Rangos: \$${viewModel.rangoPrecio.start.toInt()} - \$${viewModel.rangoPrecio.endInclusive.toInt()}",
                         fontSize = 14.sp,
-                        color = Color.White,
+                        color = Color.Black,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
@@ -127,14 +127,14 @@ fun FiltrosScreen(
                             checked = viewModel.selectOptimo,
                             onCheckedChange = { viewModel.selectOptimo = it }
                         )
-                        Text("Óptimo", color = Color.White)
+                        Text("Óptimo", color = Color.Black)
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = viewModel.selectBajo,
                             onCheckedChange = { viewModel.selectBajo = it }
                         )
-                        Text("Bajo", color = Color.White)
+                        Text("Bajo", color = Color.Black)
                     }
                 }
             }
@@ -164,7 +164,7 @@ fun FiltrosScreen(
                                     viewModel.proveedorSeleccionado = if (isChecked) pro else ""
                                 }
                             )
-                            Text(text = pro, color = Color.White, fontSize = 14.sp)
+                            Text(text = pro, color = Color.Black, fontSize = 14.sp)
                         }
                     }
                 }
@@ -181,7 +181,7 @@ fun FiltrosScreen(
                 OutlinedButton(
                     onClick = { viewModel.limpiarFiltros() },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black),
                     border = BorderStroke(1.dp, Color.LightGray),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -223,13 +223,13 @@ fun FiltroDesplegable(
                 text = titulo,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.White
+                color = Color.Black
             )
 
             Icon(
                 imageVector = if (estaExpandido) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                 contentDescription = if (estaExpandido) "Colapsar" else "Expandir",
-                tint = Color.White
+                tint = Color.Black
             )
         }
 
