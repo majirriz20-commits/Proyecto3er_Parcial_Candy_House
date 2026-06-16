@@ -59,7 +59,7 @@ fun FiltrosScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            HorizontalDivider(color = Color(0xFFE0E0E0), thickness = 1.dp)
+            HorizontalDivider(color = Color(0xFF000000), thickness = 1.dp)
 
             // 1. Categorías
             FiltroDesplegable(titulo = "Categorías") {
@@ -243,7 +243,7 @@ fun FiltroDesplegable(
             }
         }
 
-        HorizontalDivider(color = Color(0xFFE0E0E0), thickness = 1.dp)
+        HorizontalDivider(color = Color(0xFF000000), thickness = 1.dp)
     }
 }
 

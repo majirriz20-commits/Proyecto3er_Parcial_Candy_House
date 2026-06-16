@@ -178,15 +178,15 @@ fun AddProducts(
                     Text(text = "Nuevo Producto", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    CandyInputField(label = "Título", icon = "🍬", value = titulo, onValueChange = { titulo = it }, placeholder = "Nombre del producto", iconColor = Color(0xFFFF4081))
-                    CandyInputField(label = "Precio", icon = "🏷️", value = precio, onValueChange = { precio = it }, placeholder = "$ 0.00", iconColor = Color(0xFF0095FF))
-                    CandyInputField(label = "Existencia", icon = "📦", value = existencia, onValueChange = { existencia = it }, placeholder = "Stock", iconColor = Color(0xFFFFD600))
-                    CandyInputField(label = "Pasillo", icon = "📍", value = pasillo, onValueChange = { pasillo = it }, placeholder = "Número", iconColor = Color(0xFFFF4081))
-                    CandyInputField(label = "Proveedor", icon = "👤", value = proveedor, onValueChange = { proveedor = it }, placeholder = "Nombre", iconColor = Color(0xFF0095FF))
+                    CandyInputField(label = "Título", icon = "", value = titulo, onValueChange = { titulo = it }, placeholder = "Nombre del producto", iconColor = Color(0xFFFF4081))
+                    CandyInputField(label = "Precio", icon = "", value = precio, onValueChange = { precio = it }, placeholder = "$ 0.00", iconColor = Color(0xFF0095FF))
+                    CandyInputField(label = "Existencia", icon = "", value = existencia, onValueChange = { existencia = it }, placeholder = "Stock", iconColor = Color(0xFFFFD600))
+                    CandyInputField(label = "Pasillo", icon = "", value = pasillo, onValueChange = { pasillo = it }, placeholder = "Número", iconColor = Color(0xFFFF4081))
+                    CandyInputField(label = "Proveedor", icon = "", value = proveedor, onValueChange = { proveedor = it }, placeholder = "Nombre", iconColor = Color(0xFF0095FF))
 
                     CategoriaSelector(categoriaSeleccionada = categoria, onSeleccionar = { categoria = it })
 
-                    CandyInputField(label = "Fecha de caducidad", icon = "📅", value = fechaCaducidad, onValueChange = { fechaCaducidad = it }, placeholder = "MM/AAAA", iconColor = Color(0xFFFF4081))
+                    CandyInputField(label = "Fecha de caducidad", icon = "", value = fechaCaducidad, onValueChange = { fechaCaducidad = it }, placeholder = "MM/AAAA", iconColor = Color(0xFFFF4081))
 
                     errorGuardado?.let {
                         Spacer(modifier = Modifier.height(8.dp))

@@ -85,25 +85,25 @@ fun HistorialScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "🍬 Producto",
+                    "Producto",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1.2f)
                 )
                 Text(
-                    "✏️ Acción",
+                    "Acción",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(0.8f)
                 )
                 Text(
-                    "📦 Cantidad",
+                    "Cantidad",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(0.9f)
                 )
                 Text(
-                    "📅 Fecha",
+                    "Fecha",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(0.9f)
