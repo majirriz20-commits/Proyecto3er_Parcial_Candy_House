@@ -38,9 +38,8 @@ fun NavGraph(
         }
 
         composable("historial") {
-            HistorialScreen()
+            HistorialScreen(navController = navController)
         }
-
         composable("detail/{productoId}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("productoId")?.toIntOrNull() ?: 1
             val producto = candyViewModel.listaDesdeApi.find { it.id == id }
